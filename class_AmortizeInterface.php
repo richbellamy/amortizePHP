@@ -205,9 +205,9 @@ class AmortizeInterface extends AmortizeFeatures {
 
 	private function setExternalObjects($info=null) {
 		foreach ($this->externals as $name => $class) {
-			if (isset($info[$name]) && is_object($info[$name]) && get_class($info[$name])==$class) {
+			if (isset($info[$name]) && is_object($info[$name]) && is_subclass_of($info[$name], $class)) {
 				$this->external_objects[$name] = $info[$name];
-			} else if (isset($this->external_objects[$name]) && is_object($this->external_objects[$name]) && get_class($this->external_objects[$name])==$class) {
+			} else if (isset($this->external_objects[$name]) && is_object($this->external_objects[$name]) && is_subclass_of($this->external_objects[$name], $class)) {
 				// Everything is good.
 			} else {
 				$obj = new $class;
@@ -320,7 +320,7 @@ class AmortizeInterface extends AmortizeFeatures {
 			if (
 				isset($this->external_objects[$name])     &&
 				is_object($this->external_objects[$name]) &&
-				get_class($this->external_objects[$name]) == $class
+				is_subclass_of($this->external_objects[$name], $class)
 			) {
 				$obj = $this->external_objects[$name];
 				$keys = $obj->getPrimary(true);

@@ -41,12 +41,12 @@ class AmortizeFeatures extends AmortizePreparation {
 	protected $table_defs = null;
 
 	/// Calls initialize() and sets the $needs_loading flag in an ID is passed in
-  public function __construct($id = NULL) {
+  public function __construct($query = NULL) {
 		parent::__construct();
 		$this->setTableDefs($this->table_defs);
-    $this->initialize($id);
-    if ($id != NULL) {
-			$this->needs_loading = true;
+    $this->initialize();
+    if ($query != NULL) {
+			$this->needs_loading = $query;
 		}
   }
 
@@ -65,14 +65,19 @@ class AmortizeFeatures extends AmortizePreparation {
 	}
 
 	/** Loads an object from the database.
-	 *  This function loads the attributes for itself from the database, where the table primary key = $id
+	 *  This function loads the attributes for itself from the database
+	 *  @param $query Can either be an array of column=>match,... format, or a value to match the primary id with
 	 *  Normally called from the constructor, it *could* also be used to change the row that an existing object
 	 *  is working on, but just making a new object is probably preferable, unless you really know what you are doing.
 	 */
-	protected function load($id) {
-		dbm_debug("load", "Loading a " . get_class($this) . " with ID = " . $id);
-		$key = $this->findTableKey();
-		$query = array($key => $id);
+	protected function load($query) {
+		if (!is_array($query)) {
+			dbm_debug("load", "Loading a " . get_class($this) . " with ID = " . $query);
+			$key = $this->findTableKey();
+			$query = array($key => $query);
+		} else {
+			dbm_debug("load", "Loading a " . get_class($this) . " with " . print_r($query, true));
+		}
 		$info = $this->sqlMagicGetOne($query);
 		if ($info && is_array($info)) {
 			$this->setAttribs($info, true);
@@ -91,9 +96,9 @@ class AmortizeFeatures extends AmortizePreparation {
 	protected function loadIfNeeded(){
 		// Perform delayed load
 		if ($this->needs_loading) {
+			$query = $this->needs_loading;
 			$this->needs_loading = false;
-			$id = $this->getPrimary();
-      if ($this->load($id) === false) {
+      if ($this->load($query) === false) {
         // The load failed. . . a never-before-seen primary ID is being explicitly set by the constructor.
         // Mark it dirty so we are sure that it saves.
         dbm_debug("failedload", "load failed");
