@@ -217,7 +217,6 @@ class AmortizeFeatures extends AmortizePreparation {
 	protected function getLinkedObjects($class, $params=NULL, $relation=NULL, $backLinks=FALSE, $wherelike=NULL, $ordering=NULL) {
 		$class = (is_object($class)) ? get_class($class) : $class;
 		$prototype = new $class;
-		$key = $prototype->getPrimaryKey();
 
 		$id = $this->getPrimary();
 
@@ -233,8 +232,7 @@ class AmortizeFeatures extends AmortizePreparation {
 
 		$results = array();
 		foreach ($data as $fields) {
-			$id=$fields[$key];
-			$temp = Amortize::generate($class, $id, $fields);
+			$temp = Amortize::generate($class, $fields);
 			$results[] = $temp;
 		}
 
@@ -318,7 +316,7 @@ class AmortizeFeatures extends AmortizePreparation {
 		if (is_array($list)) {
 			foreach ($list as $data) {
 				$id = $data[$key];
-				$temp = Amortize::generate($proto, $id, $data);
+				$temp = Amortize::generate($proto, $data);
 				$returnMe[$id] = $temp;
 			}
 		}
