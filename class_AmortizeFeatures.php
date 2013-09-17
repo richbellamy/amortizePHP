@@ -204,6 +204,7 @@ class AmortizeFeatures extends AmortizePreparation {
 				return TRUE;
 			} else {
 				// ID === false, there was an error
+				xdebug_print_function_stack();
 				die("Save Failed!\n".mysql_error());
 				return FALSE;
 			}
@@ -213,9 +214,10 @@ class AmortizeFeatures extends AmortizePreparation {
 	}
 
 
-	protected function getLinkedObjects($example, $params=NULL, $relation=NULL, $backLinks=FALSE, $wherelike=NULL, $ordering=NULL) {
-		$example = (is_object($example)) ? get_class($example) : $example;
-		$prototype = new $example;
+	protected function getLinkedObjects($class, $params=NULL, $relation=NULL, $backLinks=FALSE, $wherelike=NULL, $ordering=NULL) {
+		$class = (is_object($class)) ? get_class($class) : $class;
+		$prototype = new $class;
+		$key = $prototype->getPrimaryKey();
 
 		$id = $this->getPrimary();
 
@@ -231,8 +233,8 @@ class AmortizeFeatures extends AmortizePreparation {
 
 		$results = array();
 		foreach ($data as $fields) {
-			$temp = clone($prototype);
-			$temp->setAttribs($fields, TRUE);
+			$id=$fields[$key];
+			$temp = Amortize::generate($class, $id, $fields);
 			$results[] = $temp;
 		}
 
@@ -312,14 +314,12 @@ class AmortizeFeatures extends AmortizePreparation {
 		$returnMe = array();
 		
 		$proto = get_class($this);
-		$proto = new $proto;
 		
 		if (is_array($list)) {
 			foreach ($list as $data) {
-// 				print_r($data);
-				$temp = clone $proto;
-				$temp->setAttribs($data, TRUE);
-				$returnMe[$data[$key]] = $temp;
+				$id = $data[$key];
+				$temp = Amortize::generate($proto, $id, $data);
+				$returnMe[$id] = $temp;
 			}
 		}
 		return $returnMe;

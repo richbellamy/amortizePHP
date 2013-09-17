@@ -15,7 +15,8 @@
 		'learntabledefs'     => "Amortize can learn how to use a table you haven't defined",
 		'custom_attribs'     => "Overwriting the attribs function to get custom attributes",
 		'advanced_links'     => "Test out some advanced link retrieval",
-		'set_get_callbacks'  => "How to write callbacks that get called automatically for certain attributes."
+		'set_get_callbacks'  => "How to write callbacks that get called automatically for certain attributes.",
+		'objectgenerator'    => "Advanced object generation for performance of complex applications"
 	);
 	define('DBM_DEBUG', true);
 	define('DBM_DROP_TABLES', true);

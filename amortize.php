@@ -20,5 +20,31 @@
 *******************************************/
 
 	include_once dirname(__FILE__) . '/class_AmortizeInterface.php';
-	class Amortize extends AmortizeInterface {}
+	class Amortize extends AmortizeInterface {
+
+		static function generate($className, $ID, $data=null) {
+			// A place to store the instances
+			static $repository = array();
+
+			// Make sure we have a sane request.
+			if (!class_exists($className)) {
+				trigger_error("Unable to load class: $className", E_USER_WARNING);
+				return false;
+			}
+
+			// Generate the storage hash
+			$hash = "{$className}_{$ID}"; // Do we really need sha1? This will be quicker.
+
+			// Check if we already have generated the object
+			if (!isset($repository[$hash])) {
+				// Stash a new instance
+				$repository[$hash] = new $className($ID);
+				// A new instance with an ID and data? Must be a DB Load.
+				$repository[$hash]->setAttribs($data, TRUE);
+			}
+
+			return $repository[$hash];
+		}
+
+	}
 ?>

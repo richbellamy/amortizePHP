@@ -321,7 +321,9 @@ class AmortizeInterface extends AmortizeFeatures {
 				$obj = new $class;
 				$key = $obj->getPrimaryKey();
 				$attribs = $this->getAttribs();
-				$this->external_objects[$name] = new $class($attribs["{$name}_{$key}"]);
+				// Old method before the generator was invented
+				//$this->external_objects[$name] = new $class($attribs["{$name}_{$key}"]);
+				$this->external_objects[$name] = Amortize::generate($class, $attribs["{$name}_{$key}"]);
 			}
 		}
 	}
