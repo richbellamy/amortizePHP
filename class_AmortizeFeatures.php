@@ -26,17 +26,17 @@ require_once dirname(__FILE__).'/class_AmortizeLink.php';
 /// Backend for the AmortizeObject
 class AmortizeFeatures extends AmortizePreparation {
 
-	/// Object status.
+	/// Object amtz_status.
 	/// Possible statuses are "needs saving", etc.
-	protected $status = array();
+	protected $amtz_status = array();
 
-	/// Object attributes are the data that is stored in the object and is saved to the database.
-	/// Every instance of a AmortizeFeatures has an array of attributes.  Each attribute corresponds
+	/// Object amtz_attributes are the data that is stored in the object and is saved to the database.
+	/// Every instance of a AmortizeFeatures has an array of amtz_attributes.  Each attribute corresponds
 	/// to a column in the database table, and each instance of this class corresponds to a row in the table.
-	/// Through member functions, attributes can be read and set to and from an object.
-	protected $attributes = array();
+	/// Through member functions, amtz_attributes can be read and set to and from an object.
+	protected $amtz_attributes = array();
 
- protected $needs_loading = FALSE;
+	protected $needs_loading = FALSE;
 
 	protected $table_defs = NULL;
 
@@ -50,22 +50,22 @@ class AmortizeFeatures extends AmortizePreparation {
 		}
   }
 
-	/// Sets all the attributes to blank and the table key to null.
+	/// Sets all the amtz_attributes to blank and the table key to null.
 	/// used for initializing new blank objects.
 	protected function initialize($id=NULL) {
 		$defs = $this->getTableDefs();
 		if (is_array($defs)) {
 			$cols = $this->getTableColumnDefs($defs);
 			foreach ($cols as $col => $coldef) {
-				$this->attributes[$col] = $this->getInitial($coldef);
-				$this->status[$col] = "clean";
+				$this->amtz_attributes[$col] = $this->getInitial($coldef);
+				$this->amtz_status[$col] = "clean";
 			}
-			$this->attributes[$this->findTableKey()] = $id;
+			$this->amtz_attributes[$this->findTableKey()] = $id;
 		}
 	}
 
 	/** Loads an object from the database.
-	 *  This function loads the attributes for itself from the database, where the table primary key = $id
+	 *  This function loads the amtz_attributes for itself from the database, where the table primary key = $id
 	 *  Normally called from the constructor, it *could* also be used to change the row that an existing object
 	 *  is working on, but just making a new object is probably preferable, unless you really know what you are doing.
 	 */
@@ -77,7 +77,7 @@ class AmortizeFeatures extends AmortizePreparation {
 		if ($info && is_array($info)) {
 			$this->setAttribs($info, TRUE);
 			foreach (array_keys($info) as $col) {
-				$this->status[$col] = "clean";
+				$this->amtz_status[$col] = "clean";
 			}
 			return TRUE;
 		} else {
@@ -105,12 +105,12 @@ class AmortizeFeatures extends AmortizePreparation {
     }
 	}
 
-  /// Returns the array of attributes for the object.
+  /// Returns the array of amtz_attributes for the object.
   protected function getAttribs() {
 		// Perform a delayed load if needed so that we have some info to return!
 		$this->loadIfNeeded();
 		// Build the return value
-		$returnMe = $this->attributes;
+		$returnMe = $this->amtz_attributes;
 		$key = $this->findTableKey();
 		if ($returnMe[$key] == NULL) {
 			// Unsaved Object, don't return the key attribute with the results
@@ -143,9 +143,9 @@ class AmortizeFeatures extends AmortizePreparation {
 				if (is_array($info[$column])) { // Filter HTML type arrays to support setAttribs($_POST);
 					$info[$column] = $this->valuesFromSet($info[$column], $def);
 				}
-				$this->attributes[$column] = $info[$column];
+				$this->amtz_attributes[$column] = $info[$column];
 				$returnVal = TRUE;
-				$this->status[$column] = "dirty";
+				$this->amtz_status[$column] = "dirty";
 			}
 		}
 
@@ -153,7 +153,7 @@ class AmortizeFeatures extends AmortizePreparation {
 	}
 
 	/// Saves the object data to the database.
-	/// This function records the attributes of the object into a row in the database.
+	/// This function records the amtz_attributes of the object into a row in the database.
 	function save($force = FALSE) {
 		$defs = $this->getTableDefs();
 		$columns = $this->getTableColumns($defs);
@@ -162,12 +162,12 @@ class AmortizeFeatures extends AmortizePreparation {
 		$key = $this->findTableKey();
 		$a = $this->getAttribs();
 		if (!isset($a[$key]) || ($a[$key] == NULL)) {
-			// This object has never been saved, force save regardless of status
+			// This object has never been saved, force save regardless of amtz_status
 			// It's very probable that this object is being linked to or is linking another object and needs an ID
 			$force = TRUE;
 			// Exclude the ID in the sql query.  This will trigger an auto_increment ID to be generated
 			$excludeID = TRUE;
-			dbm_debug("info deep", "This ".get_class($this)." is new, and we are saving all attributes regardless of status");
+			dbm_debug("info deep", "This ".get_class($this)." is new, and we are saving all amtz_attributes regardless of amtz_status");
 		} else {
 			// Object has been saved before, OR a new ID was specified by the constructor parameters.
 			// either way, we need to include the ID in the SQL statement so that the proper row gets set,
@@ -178,7 +178,7 @@ class AmortizeFeatures extends AmortizePreparation {
 		$magicput_needs_rewrite = TRUE;
 
 		foreach ($columns as $col) {
-			if (($this->status[$col] != "clean") || $force || $magicput_needs_rewrite){
+			if (($this->amtz_status[$col] != "clean") || $force || $magicput_needs_rewrite){
 				if (isset($a[$col])) {
 					$savedata[$col] = $a[$col];
 				}
@@ -193,14 +193,14 @@ class AmortizeFeatures extends AmortizePreparation {
 
 			if ($id) {
 				// Successful auto_increment Save
-				$this->attributes[$key] = $id;
+				$this->amtz_attributes[$key] = $id;
 				// Set all statuses to clean.
-				$this->status = array_fill_keys(array_keys($this->status), "clean");
+				$this->amtz_status = array_fill_keys(array_keys($this->amtz_status), "clean");
 				return TRUE;
 			} else if ($id !== FALSE) {
 				// We are not working with an auto_increment ID
 				// Set all statuses to clean.
-				$this->status = array_fill_keys(array_keys($this->status), "clean");
+				$this->amtz_status = array_fill_keys(array_keys($this->amtz_status), "clean");
 				return TRUE;
 			} else {
 				// ID === false, there was an error
@@ -254,7 +254,7 @@ class AmortizeFeatures extends AmortizePreparation {
 	 */
 	public function getPrimary() {
     $key = $this->getPrimaryKey();
-    return $this->attributes[$key];
+    return $this->amtz_attributes[$key];
 	}
 
 	/**
@@ -279,7 +279,7 @@ class AmortizeFeatures extends AmortizePreparation {
 	/**
 	 * Removes any number of rows from the table, protects against accidentally removing all.
 	 * If your $where parameter does not make sense or is null, this function protects you from accidentally blanking the table
-	 * @param $where an array of matched attributes to delete on
+	 * @param $where an array of matched amtz_attributes to delete on
 	 */
 	protected function removeSomeRows($where=NULL) {
 		return $this->sqlMagicYank($where, FALSE);
@@ -335,7 +335,7 @@ class AmortizeFeatures extends AmortizePreparation {
 	public function dumpview($pre=FALSE) {
 		if ($pre) echo "<pre style=\"color: blue\">\n";
 		echo "Attributes for this ".get_class($this).":\n";;
-		print_r($this->attributes);
+		print_r($this->amtz_attributes);
 		if ($pre) echo "</pre>\n";
 	}
 

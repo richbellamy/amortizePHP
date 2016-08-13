@@ -52,12 +52,12 @@ dbm_debug('info', "When saving the example restaurant, it received a primary key
 
 dbm_debug('info', "Like this:");
 $joes = new Restaurant($rid);
-dbm_debug('info', 'The restaurant object has been created, but there won\'t be any database traffic until you try to access its attributes:');
+dbm_debug('info', 'The restaurant object has been created, but there won\'t be any database traffic until you try to access its amtz_attributes:');
 
 // This next line will trigger the load from the database
 echo "{$joes->name} is a {$joes->rating}-star restaurant.";
 
-dbm_debug('info', 'Similarly, the external table objects, in this case the owner and manager, have been created, but they won\'t load themselves from the database until you try to access their attributes.');
+dbm_debug('info', 'Similarly, the external table objects, in this case the owner and manager, have been created, but they won\'t load themselves from the database until you try to access their amtz_attributes.');
 
 // This next line will trigger the owner object to load itself from the database
 echo "{$joes->name} is owned by {$joes->owner->firstname} {$joes->owner->lastname}.";
@@ -66,7 +66,7 @@ echo "{$joes->name} is owned by {$joes->owner->firstname} {$joes->owner->lastnam
 echo "{$joes->name} is run by {$joes->manager->firstname} {$joes->manager->lastname}.";
 
 
-dbm_debug('info', "Notice that the returned attribs include a Person object as the 'owner' and 'manager' attributes.  You get the actual objects, not just their primary keys");
+dbm_debug('info', "Notice that the returned attribs include a Person object as the 'owner' and 'manager' amtz_attributes.  You get the actual objects, not just their primary keys");
 dbm_debug('data', $joes->attribs());
 dbm_debug('data', $joes->owner->attribs());
 dbm_debug('data', $joes->manager->attribs());

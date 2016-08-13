@@ -68,7 +68,7 @@ $aBook = new Book();
 dbm_debug('info', 'Table Definitions for $aBook:');
 dbm_debug('data', $aBook->getTableDefs());
 
-dbm_debug('info', 'Giving $aBook some attributes:');
+dbm_debug('info', 'Giving $aBook some amtz_attributes:');
 $aBook->attribs(
 	array(
 		'isbn'   => '0-7414-4456-9',
@@ -78,7 +78,7 @@ $aBook->attribs(
 	)
 );
 
-dbm_debug('info', '$aBook now has these attributes:');
+dbm_debug('info', '$aBook now has these amtz_attributes:');
 $aBook->dumpview(true);
 
 dbm_debug('info', "Saving book.  The book table hasn't been created yet, so this may take a few steps . . . ");
@@ -154,7 +154,7 @@ dbm_debug('data', $myReview->getTableDefs());
 
 $myReview->dumpview(true);
 
-dbm_debug('info', 'Setting attributes on the Review . . . ');
+dbm_debug('info', 'Setting amtz_attributes on the Review . . . ');
 $myReview->attribs(
 	array(
 		'reviewtext' => 'RIP, Colonel.  Thanks for the great book.',
@@ -292,7 +292,7 @@ if ($poky->getPrimary() == 4) {
 	dbm_debug('error', 'Failed.');
 }
 
-dbm_debug('info', 'Getting the attributes for the newBook, this should trigger a load.');
+dbm_debug('info', 'Getting the amtz_attributes for the newBook, this should trigger a load.');
 echo "{$poky->title}, by {$poky->author}: <img src=\"{$poky->photoURL}\" />\n";
 
 dbm_debug('info', 'Creating a new newBook(4), this should NOT generate any database traffic.');

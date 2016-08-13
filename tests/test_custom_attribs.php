@@ -30,10 +30,10 @@ dbm_debug('info', "Setting the first and last name of the person.");
 $info = array('firstname' => 'John', 'lastname' => 'Doe');
 dbm_debug('data', $info);
 
-// Make the call to set the attributes from the info.
+// Make the call to set the amtz_attributes from the info.
 $person->attribs($info);
 
-// Returns the attributes back into the $attribs variable
+// Returns the amtz_attributes back into the $attribs variable
 $attribs = $person->attribs();
 
 // The above could have been done in one line: // $attribs = $person->attribs($info); // I separated it for illustrative purposes
@@ -46,7 +46,7 @@ dbm_debug('info', "Reverse Name: " . $attribs['lastfirst'] );
 
 dbm_debug('info', "Showing the data actually stored in the object:");
 $person->dumpview(true);
-dbm_debug('info', "Showing attributes.");
+dbm_debug('info', "Showing amtz_attributes.");
 dbm_debug('data', $person->attribs());
 
 
@@ -73,7 +73,7 @@ dbm_debug('heading', "Showing the data actually stored in the object.");
 
 $person->dumpview(true);
 
-dbm_debug('heading', "Showing attributes.");
+dbm_debug('heading', "Showing amtz_attributes.");
 
 dbm_debug('data', $person->attribs());
 

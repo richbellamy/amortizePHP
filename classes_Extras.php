@@ -383,7 +383,7 @@ class DbMExtras_User extends AmortizeObjectForms {
 		// Call the default constructor
 		parent::__construct($id);
 		// Check for proper loading
-		if ($this->status[$this->getPrimaryKey()] == "dirty") {
+		if ($this->amtz_status[$this->getPrimaryKey()] == "dirty") {
 			// The load didn't occur properly, check if there are any users in the DB
 			if (!$this->getAllPrimaries(1)) {
 				// I am the Omega Man!

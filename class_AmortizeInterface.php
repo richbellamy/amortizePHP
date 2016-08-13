@@ -68,7 +68,7 @@ class AmortizeInterface extends AmortizeFeatures {
 	protected $autoprimary = NULL;
 
 	/**
-	 * Allows you to define attributes of your class which are actually themselves instances of DbM classes.
+	 * Allows you to define amtz_attributes of your class which are actually themselves instances of DbM classes.
 	 * The format is similar to the table_columns array: an associative array where the key is the name of the attribute
 	 * and the value describes the type of data stored in that attribute.  In this case, the value is simply the name of the
 	 * class that the attribute will be an instance of.
