@@ -123,9 +123,9 @@ QUERY;
 QUERY;
 
 			dbm_debug("system query", $fromQuery);
-			mysql_query($fromQuery, $sql) OR die($fromQuery . "\n\n" . mysql_error());
+			mysqli_query($sql, $fromQuery) OR die($fromQuery . "\n\n" . mysqli_error($sql));
 			dbm_debug("system query", $toQuery);
-			mysql_query($toQuery, $sql) OR die($toQuery . "\n\n" . mysql_error());
+			mysqli_query($sql, $toQuery) OR die($toQuery . "\n\n" . mysqli_error($sql));
 		}
 	}
 

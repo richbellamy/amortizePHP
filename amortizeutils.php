@@ -82,7 +82,7 @@ $_SERVER['amtz_queries']    = array();
 
 function amtz_query($query, $connection=null) {
 	$startTime   = microtime(true);
-	$result      = mysql_query($query, $connection);
+	$result      = mysqli_query($connection, $query);
 	$endTime     = microtime(true);
 	$elapsedTime = $endTime - $startTime;
 	$_SERVER['amtz_queries'][] = array(

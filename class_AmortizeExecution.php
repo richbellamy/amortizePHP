@@ -241,8 +241,7 @@ class AmortizeExecution {
 // 		$unique = get_class($this);
 		$unique = md5("{$this->sql_host};{$this->sql_user};{$this->sql_pass}");
 		if (!isset(self::$sqlConnections[$unique])) {
-			$sql   = mysql_connect($this->sql_host, $this->sql_user, $this->sql_pass) OR die(SQL_CANNOT_CONNECT);
-							mysql_select_db($this->sql_dbase, $sql)             OR die(SQL_CANNOT_CONNECT);
+			$sql   = mysqli_connect($this->sql_host, $this->sql_user, $this->sql_pass, $this->sql_dbase) OR die(SQL_CANNOT_CONNECT);
 			// Prep connection for strict error handling.
 			amtz_query("set sql_mode=strict_all_Tables", $sql);
 			self::$sqlConnections[$unique] = $sql;
@@ -261,7 +260,7 @@ class AmortizeExecution {
 			return FALSE;
 		}
 		$definition = array();
-		while ($row = mysql_fetch_assoc($results)) {
+		while ($row = mysqli_fetch_assoc($results)) {
 			$definition[$row['Field']] = array (
 				$row['Type'],
 				$row['Null'],
@@ -294,7 +293,7 @@ class AmortizeExecution {
 	protected function table_exists() {
 		$sql = $this->getSQLConnection();
 		$result = amtz_query("SHOW TABLES", $sql);
-		while ($row = mysql_fetch_row($result)) {
+		while ($row = mysqli_fetch_row($result)) {
 			if ($row[0] == $this->sql_prfx.$this->getTableName())
 				return TRUE;
 		}
@@ -307,7 +306,7 @@ class AmortizeExecution {
 		dbm_debug("info", "Creating table");
 		dbm_debug("system query", $query);
 		$sql = $this->getSQLConnection();
-		$result = amtz_query($query, $sql) OR die($query . "\n\n" . mysql_error());
+		$result = amtz_query($query, $sql) OR die($query . "\n\n" . mysqli_error($sql));
 		if ($result) {
 			dbm_debug("info", "Success creating table");
 			return TRUE;
@@ -401,7 +400,7 @@ class AmortizeExecution {
 		$result = amtz_query($query, $sql);
 		if (! $result) {
 			// We have a problem here
-			dbm_debug("system error", mysql_error());
+			dbm_debug("system error", mysqli_error($sql));
 			if (! $this->table_exists()) {
 				dbm_debug("error", "Query Failed . . . table $tableName doesn't exist.");
 				$this->createTable();
@@ -423,14 +422,14 @@ class AmortizeExecution {
 		switch (strtoupper(first_val(explode(' ', $query)))) {
 		case 'SELECT':
 			$returnVal = array();
-			while ($row = mysql_fetch_assoc($result)) {
+			while ($row = mysqli_fetch_assoc($result)) {
 				$returnVal[] = $row;
 			}
 			return $returnVal;
 			break;
 		case 'INSERT':
 		case 'REPLACE':
-			return mysql_insert_id($sql);
+			return mysqli_insert_id($sql);
 			break;
 		}
 	}
