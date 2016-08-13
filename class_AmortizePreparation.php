@@ -277,7 +277,7 @@ class AmortizePreparation extends AmortizeExecution {
 				if (is_array($value)) {
 					$retVal[$key] = $this->sqlFilter($value);  // OMG Scary Recursion! :)
 				} else {
-					$retVal[$key] = mysql_real_escape_string($value, $sql);
+					$retVal[$key] = mysqli_real_escape_string($sql, $value);
 				}
 			}
 		}

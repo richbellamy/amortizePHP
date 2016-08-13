@@ -205,7 +205,7 @@ class AmortizeFeatures extends AmortizePreparation {
 			} else {
 				// ID === false, there was an error
 				xdebug_print_function_stack();
-				die("Save Failed!\n".mysql_error());
+				die("Save Failed!\n");
 				return FALSE;
 			}
 
