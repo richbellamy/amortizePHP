@@ -131,7 +131,7 @@
 
 				//Database Time
 				$dbTime = $_SERVER['amtz_query_time'];
-				$log = &$_SESSION['dbTimes'][$_GET['test']];
+				$log = &$_SESSION['dbTimes'][$curTest];
 				$log[]=$dbTime;
 				while (count($log) > 20) {
 					array_shift($log);
@@ -140,7 +140,7 @@
 				$dbAverage = array_sum($log) / $dbSamples;
 
 				// Execution Time
-				$log = &$_SESSION['exTimes'][$_GET['test']];
+				$log = &$_SESSION['exTimes'][$curTest];
 				$exTime = $scriptTime - $dbTime;
 				$log[]=$exTime;
 				while (count($log) > 20) {
